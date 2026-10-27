@@ -1,0 +1,128 @@
+<!doctype html>
+<!-- TOOLGOOL: static GitHub Pages project. Edit data.js to change demo users and statistics. -->
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070914">
+<title>TOOLGOOL | Личный кабинет</title>
+<!-- ===== CSS / style.css: НАЧАЛО СТИЛЕЙ ===== -->
+<link rel="stylesheet" href="style.css">
+<!-- ===== CSS / style.css: КОНЕЦ СТИЛЕЙ ===== -->
+</head>
+<body>
+<!-- ===== HTML: НАЧАЛО РАЗМЕТКИ ИНТЕРФЕЙСА ===== -->
+<canvas id="space" aria-hidden="true"></canvas><div class="aurora" aria-hidden="true"></div>
+<main>
+  <header class="brand">
+    <div class="brand-mark" aria-hidden="true"><span>✦</span></div>
+    <h1>TOOLGOOL</h1>
+    <p>Personal access interface</p>
+  </header>
+  <section class="card" id="card" aria-label="Демонстрационная авторизация">
+    <div id="login">
+      <div class="eyebrow"><span class="dot"></span> Система доступа <span class="dot"></span></div>
+      <h2>Вход в TOOLGOOL</h2>
+      <p class="subtitle">Войдите в свой профиль: логин и шестизначный код</p>
+      <label class="login-label" for="loginName">ЛОГИН</label>
+      <div class="login-input-wrap"><span class="login-prefix">@</span><input id="loginName" class="login-input" value="" placeholder="Введите логин" maxlength="20" autocomplete="username" autocapitalize="none" spellcheck="false" aria-label="Логин" autocomplete="username" autocapitalize="off" spellcheck="false"></div>
+      <div class="login-hint">Первая буква автоматически станет заглавной</div>
+      <div class="codebox" id="codebox" role="group" aria-label="Шестизначный код" aria-live="polite">
+        <div class="cell active" data-cell="0"></div><div class="cell" data-cell="1"></div><div class="cell" data-cell="2"></div><div class="cell" data-cell="3"></div><div class="cell" data-cell="4"></div><div class="cell" data-cell="5"></div>
+      </div>
+      <div class="keypad" id="keypad" aria-label="Цифровая клавиатура">
+        <button class="key" data-digit="1">1</button><button class="key" data-digit="2">2</button><button class="key" data-digit="3">3</button>
+        <button class="key" data-digit="4">4</button><button class="key" data-digit="5">5</button><button class="key" data-digit="6">6</button>
+        <button class="key" data-digit="7">7</button><button class="key" data-digit="8">8</button><button class="key" data-digit="9">9</button>
+        <button class="key utility" id="clear">Очистить</button><button class="key zero" data-digit="0">0</button><button class="key utility" id="delete">Удалить</button>
+      </div>
+      <button class="primary" id="submit">Подтвердить доступ</button>
+      <p class="status" id="status" role="status" aria-live="polite">Ожидание ввода кода</p>
+      <p class="demo-note">ДЕМО-ДОСТУП · КОД: 123456</p>
+    </div>
+    <div id="success" class="success-screen hidden">
+      <div class="success-icon" id="successIcon" aria-hidden="true"><svg viewBox="0 0 50 50"><path class="check-path" d="M10 26 L21 36 L41 14"/></svg></div>
+      <div class="eyebrow"><span class="dot"></span> Идентификация завершена</div>
+      <h2>ДОСТУП ОТКРЫТ</h2>
+      <p>Код подтверждён. Защищённый демонстрационный сеанс активирован.</p>
+      <div class="verification-steps" id="verificationSteps">
+        <div data-step="0"><span class="step-check">·</span><span>Проверка кода</span><b>Ожидание</b></div>
+        <div data-step="1"><span class="step-check">·</span><span>Создание сеанса</span><b>Ожидание</b></div>
+        <div data-step="2"><span class="step-check">·</span><span>Подготовка интерфейса</span><b>Ожидание</b></div>
+      </div>
+      <div class="redirect-progress"><span id="redirectBar"></span></div>
+      <p class="redirect-label" id="redirectLabel">Переход в личный интерфейс…</p>
+    </div>
+    <div id="dashboard" class="dashboard hidden">
+      <div class="dashboard-top"><div class="dash-mark">✦</div><span class="online"><i></i> СЕАНС АКТИВЕН</span></div>
+      <p class="dash-kicker">TOOLGOOL / ЛИЧНЫЙ ПРОФИЛЬ</p>
+      <h2>Добро пожаловать, <span id="welcomeName">Toolgool</span>.</h2>
+      <p class="dash-description">Подтверждение пройдено. Демонстрационный интерфейс готов к работе.</p>
+      <div class="profile-panel">
+        <div class="avatar" id="profileAvatar">T</div>
+        <div class="profile-copy"><b id="profileNamePreview">Toolgool</b><span id="profileStatusPreview">Пользователь подтверждён</span></div>
+        <span class="verified" title="Подтверждено">✓</span>
+      </div>
+      <!-- Статистика строится автоматически из данных текущего аккаунта. -->
+      <div class="stats-grid dynamic-stats" id="dynamicStats" aria-live="polite"></div>
+      <div class="section-heading"><span>ТАБЛИЦА ЛИДЕРОВ</span><span class="section-line"></span></div>
+      <div class="leaderboard-wrap">
+        <table class="leaderboard" aria-label="Таблица лидеров">
+          <thead><tr><th>#</th><th>Игрок</th><th>Уровень</th><th>Активность</th></tr></thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+        <p class="leaderboard-note">Рейтинг демонстрационный и формируется из локальной статистики аккаунтов.</p>
+      </div>
+      <div class="section-heading"><span>БЫСТРЫЕ ДЕЙСТВИЯ</span><span class="section-line"></span></div>
+      <div class="quick-actions">
+        <button class="quick-action" id="focusAction"><span>◎</span><b>Фокус</b><small>Удобный режим</small></button>
+        <button class="quick-action" id="activityAction"><span>◷</span><b>Активность</b><small>История действий</small></button>
+        <button class="quick-action" id="themeAction"><span>◐</span><b>Оформление</b><small>Сменить акцент</small></button>
+        <button class="quick-action" id="copyProfileAction"><span>⧉</span><b>Копировать</b><small>Имя профиля</small></button>
+        <button class="quick-action" id="copyLoginAction"><span>@</span><b>Логин</b><small>Скопировать логин</small></button>
+        <button class="quick-action" id="clearActivityAction"><span>⌫</span><b>Очистить</b><small>Историю событий</small></button>
+      </div>
+      <div class="section-heading"><span>ЗНАЧКИ ПРОФИЛЯ</span><span class="section-line"></span></div>
+      <div class="badge-row" id="badgeRow">
+        <div class="profile-badge"><span>✦</span><b>ПЕРВЫЙ ВХОД</b><small>Сеанс подтверждён</small></div>
+        <div class="profile-badge"><span>⌁</span><b>ИССЛЕДОВАТЕЛЬ</b><small>Кабинет открыт</small></div>
+        <div class="profile-badge locked"><span>◇</span><b>КОЛЛЕКЦИОНЕР</b><small>Демо-достижение</small></div>
+      </div>
+      <div class="section-heading"><span>ОБЗОР</span><span class="section-line"></span></div>
+      <div class="dashboard-grid">
+        <div class="dash-tile"><span class="tile-icon">◈</span><b>Статус доступа</b><small>Активен</small></div>
+        <div class="dash-tile"><span class="tile-icon">⌁</span><b>Сеанс</b><small>Локальный · Demo</small></div>
+        <div class="dash-tile wide"><span class="tile-icon">✧</span><b>Система TOOLGOOL</b><small>Локальный кабинет с настройками удобства и персональными действиями.</small></div>
+      </div>
+      <div class="section-heading settings-heading" id="settingsAnchor"><span>НАСТРОЙКИ ПРОФИЛЯ</span><span class="section-line"></span></div>
+      <div class="settings-panel" id="settingsPanel">
+        <div class="setting-row"><div><b>Эффекты интерфейса</b><small>Свечение, появление карточек и переходы</small></div><label class="switch"><input id="effectsToggle" type="checkbox" checked><span class="switch-track"></span></label></div>
+        <div class="setting-row"><div><b>Частицы на фоне</b><small>Сеть точек и световые вспышки</small></div><label class="switch"><input id="particlesToggle" type="checkbox" checked><span class="switch-track"></span></label></div>
+        <div class="setting-row"><div><b>Компактный вид</b><small>Больше информации на экране</small></div><label class="switch"><input id="compactToggle" type="checkbox"><span class="switch-track"></span></label></div>
+        <div class="setting-row"><div><b>Крупный текст</b><small>Удобнее читать на небольшом экране</small></div><label class="switch"><input id="largeTextToggle" type="checkbox"><span class="switch-track"></span></label></div>
+        <div class="setting-row"><div><b>Повышенный контраст</b><small>Более заметные границы элементов</small></div><label class="switch"><input id="contrastToggle" type="checkbox"><span class="switch-track"></span></label></div>
+        <div class="setting-row"><div><b>Уведомления интерфейса</b><small>Короткие сообщения о действиях</small></div><label class="switch"><input id="noticeToggle" type="checkbox" checked><span class="switch-track"></span></label></div>
+        <div class="setting-row"><div><b>Уменьшить движение</b><small>Меньше анимаций для плавной работы</small></div><label class="switch"><input id="motionToggle" type="checkbox"><span class="switch-track"></span></label></div>
+        <button class="save-button" id="resetSettings">Сбросить настройки</button>
+        <p class="settings-message" id="settingsMessage" role="status" aria-live="polite"></p>
+      </div>
+      <div class="section-heading settings-heading"><span>ПОСЛЕДНИЕ СОБЫТИЯ</span><span class="section-line"></span></div>
+      <div class="activity-panel" id="activityPanel" aria-live="polite">
+        <div class="activity-item"><span class="activity-icon">✓</span><div><b>Доступ подтверждён</b><small>Только что · Локальная проверка</small></div><span class="activity-state">OK</span></div>
+        <div class="activity-item"><span class="activity-icon">⌘</span><div><b>Профиль открыт</b><small>Текущий сеанс</small></div><span class="activity-state">INFO</span></div>
+      </div>
+      <button class="secondary dashboard-secondary" id="exportProfile">Экспорт данных профиля</button>
+      <button class="primary" id="logout">Завершить сеанс</button>
+      <p class="demo-note">DEMO MODE · НАСТРОЙКИ НЕ ОТПРАВЛЯЮТСЯ НА СЕРВЕР</p>
+    </div>
+  </section>
+  <footer class="footer"><span class="lock">◇</span> Демонстрационный интерфейс <span>·</span> Локальная проверка</footer>
+</main>
+<!-- ===== HTML: КОНЕЦ РАЗМЕТКИ ИНТЕРФЕЙСА ===== -->
+
+<script src="data.js"></script>
+<script src="account.js"></script>
+<script src="stat.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
